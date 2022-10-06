@@ -122,6 +122,8 @@ export class TinaMediaStore implements MediaStore {
         console.log(item.file.name.indexOf('/'))
         console.log(mime.lookup(item.file.name))
         console.log(mime.types['png'])
+        // @ts-ignore
+        window.MIME = mime
         console.log(mime.contentType(item.file.name))
         const uploadRes = await this.fetchFunction(signedUrl, {
           method: 'PUT',
