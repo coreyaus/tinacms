@@ -101,6 +101,7 @@ export class TinaMediaStore implements MediaStore {
 
     if (await this.isAuthenticated()) {
       for (const item of media) {
+        console.log({ item })
         const path = `${
           item.directory && item.directory !== '/'
             ? `${item.directory}/${item.file.name}`
@@ -116,6 +117,8 @@ export class TinaMediaStore implements MediaStore {
           throw new Error('Unexpected error generating upload url')
         }
 
+        console.log(item.file)
+        console.log(mime.contentType(item.file.name))
         const uploadRes = await this.fetchFunction(signedUrl, {
           method: 'PUT',
           body: item.file,
