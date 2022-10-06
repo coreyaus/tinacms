@@ -124,13 +124,12 @@ export class TinaMediaStore implements MediaStore {
         console.log(mime.types['png'])
         // @ts-ignore
         window.MIME = mime
-        console.log(mime.contentType(item.file.name))
+        // console.log(mime.contentType(item.file.name))
         const uploadRes = await this.fetchFunction(signedUrl, {
           method: 'PUT',
           body: item.file,
           headers: {
-            'Content-Type':
-              mime.contentType(item.file.name) || 'application/octet-stream',
+            'Content-Type': item.file.type || 'application/octet-stream',
             'Content-Length': String(item.file.size),
           },
         })
