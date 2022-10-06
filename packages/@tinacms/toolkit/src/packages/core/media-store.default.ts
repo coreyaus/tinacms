@@ -118,6 +118,8 @@ export class TinaMediaStore implements MediaStore {
         }
 
         console.log(item.file)
+        console.log(item.file.name)
+        console.log(item.file.name.indexOf('/'))
         console.log(mime.contentType(item.file.name))
         const uploadRes = await this.fetchFunction(signedUrl, {
           method: 'PUT',
