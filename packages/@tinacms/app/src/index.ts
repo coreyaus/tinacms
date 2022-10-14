@@ -35,18 +35,24 @@ export const viteBuild = async ({
   outputFolder: string
   apiUrl: string
 }) => {
+  console.log('vite build 1', new Date().toString())
   const prebuildPath = path.resolve(__dirname, 'assets')
   const pathToConfig = path.join(rootPath, '.tina', 'config')
   const packageJSONFilePath = path.join(rootPath, 'package.json')
   const outDir = path.join(rootPath, publicFolder, outputFolder)
   await fs.emptyDir(outDir)
+  console.log('vite build 2', new Date().toString())
+
   await fs.ensureDir(outDir)
+  console.log('vite build 3', new Date().toString())
+
   await fs.writeFile(
     path.join(rootPath, publicFolder, outputFolder, '.gitignore'),
     `index.html
 assets/
 vite.svg`
   )
+  console.log('vite build 4', new Date().toString())
 
   /**
    * This pre-build logic is the same as what we do in packages/@tinacms/cli/src/cmds/compile/index.ts.
@@ -57,12 +63,16 @@ vite.svg`
   const packageJSON = JSON.parse(
     fs.readFileSync(packageJSONFilePath).toString() || '{}'
   )
+  console.log('vite build 5', new Date().toString())
+
   const define = {}
   const deps = packageJSON?.dependencies || []
   const peerDeps = packageJSON?.peerDependencies || []
   const devDeps = packageJSON?.devDependencies || []
   const external = Object.keys({ ...deps, ...peerDeps, ...devDeps })
   const out = path.join(rootPath, '.tina', '__generated__', 'out.jsx')
+  console.log('vite build 6', new Date().toString())
+
   await esbuild({
     bundle: true,
     platform: 'browser',
@@ -75,6 +85,7 @@ vite.svg`
     loader: loaders,
     define: define,
   })
+  console.log('vite build 7', new Date().toString())
 
   const base = `/${outputFolder}/`
 
@@ -132,11 +143,17 @@ vite.svg`
     },
     logLevel: 'silent',
   }
+  console.log('vite build 8', new Date().toString())
+
   if (local) {
+    console.log('vite build local', new Date().toString())
+
     // Copy the dev index which has instructions for talking to the vite dev asset server
     const indexDev = await fs
       .readFileSync(path.join(__dirname, 'index.dev.html'))
       .toString()
+    console.log('vite build local 9', new Date().toString())
+
     if (MONOREPO_DEV) {
       console.warn('MONOREPO_DEV mode, vite root is @tinacms/app')
       await fs.outputFileSync(
@@ -145,24 +162,40 @@ vite.svg`
           .replace(`INSERT_OUTPUT_FOLDER_NAME`, outputFolder)
           .replace('assets/out.es.js', 'src/main.tsx')
       )
+      console.log('vite build local 10', new Date().toString())
     } else {
+      console.log('vite build !local', new Date().toString())
+
       await fs.outputFileSync(
         path.join(outDir, 'index.html'),
         indexDev.replace(`INSERT_OUTPUT_FOLDER_NAME`, outputFolder)
       )
+      console.log('vite build !local 9', new Date().toString())
+
       // Copy the pre-built assets into the user's public output folder
       // This will be used as the entry point by the vite dev server
       await fs.copySync(prebuildPath, path.join(outDir, 'assets'))
+      console.log('vite build !local 10', new Date().toString())
     }
 
     // This build is called every time the user makes a change to their config,
     // so ensure we don't run into an existing server error
     if (server) {
+      console.log('vite build !local 11', new Date().toString())
+
       await server.close()
+      console.log('vite build !local 12', new Date().toString())
     }
+    console.log('vite build !local 13', new Date().toString())
+
     server = await createServer(config)
+    console.log('vite build !local 14', new Date().toString())
+
     await server.listen()
+    console.log('vite build !local 15', new Date().toString())
+
     await server.printUrls()
+    console.log('vite build !local 16', new Date().toString())
   } else {
     /**
      * This is kind of awkward, we're putting files in the specified
@@ -171,15 +204,24 @@ vite.svg`
      * discovered properly. So this drops in the scaffolding
      * and then builds over it
      */
+    console.log('vite build 17', new Date().toString())
+
     await fs.copyFileSync(
       path.join(__dirname, 'index.html'),
       path.join(outDir, 'index.html')
     )
+    console.log('vite build 18', new Date().toString())
+
     // Copy the pre-built assets into the user's public output folder
     // This will be used as the entry point by the vite dev server
     await fs.copySync(prebuildPath, path.join(outDir, 'assets'))
+    console.log('vite build 19', new Date().toString())
+
     await build(config)
+    console.log('vite build 20', new Date().toString())
+
     await fs.rmSync(out)
+    console.log('vite build 21', new Date().toString())
   }
 }
 

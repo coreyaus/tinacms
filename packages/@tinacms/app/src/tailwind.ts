@@ -26,6 +26,7 @@ export const viteTina = () => {
     config: () => {
       const plugins: Plugin[] = []
 
+      console.log('tailwind1', new Date().toString())
       const tw = tailwind({
         important: '.tina-tailwind',
         theme: {
@@ -246,9 +247,16 @@ export const viteTina = () => {
           aspectRatio,
         ],
       }) as unknown as Plugin
+      console.log('tailwind2', new Date().toString())
+
       plugins.push(tailwindNesting)
+      console.log('tailwind3', new Date().toString())
+
       plugins.push(postcssNested)
+      console.log('tailwind4', new Date().toString())
+
       plugins.push(tw)
+      console.log('tailwind5', new Date().toString())
 
       return {
         css: {
