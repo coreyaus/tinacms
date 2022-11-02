@@ -1,4 +1,5 @@
 import React from 'react'
+import { client } from '../../.tina/__generated__/client'
 import { staticRequest } from 'tinacms'
 import { Layout } from '../../components/Layout'
 import { useEditState, useTina } from 'tinacms/dist/react'
@@ -63,8 +64,10 @@ export const getStaticPaths = async () => {
         postConnection {
           edges {
             node {
-              _sys {
-                filename
+              ...on Document {
+                _sys {
+                  filename
+                }
               }
             }
           }
@@ -82,24 +85,15 @@ export const getStaticPaths = async () => {
   }
 }
 export const getStaticProps = async (ctx) => {
-  const variables = {
-    relativePath: ctx.params.slug + '.md',
-  }
-  let data = {}
-  try {
-    data = await staticRequest({
-      query,
-      variables,
-    })
-  } catch (error) {
-    // swallow errors related to document creation
-  }
+  const res = await client.queries.post({
+    relativePath: `${ctx.params.slug}.md`,
+  })
 
   return {
     props: {
-      data,
-      query,
-      variables,
+      data: res.data,
+      query: res.query,
+      variables: res.variables,
     },
   }
 }
