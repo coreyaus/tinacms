@@ -14,6 +14,7 @@ limitations under the License.
 import React from "react";
 import { Container } from "./container";
 import { Section } from "./section";
+import { Test } from "./Test";
 import { ThemeContext } from "./theme";
 import format from "date-fns/format";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
@@ -34,6 +35,8 @@ const components: Components<{
     disclaimer?: TinaMarkdownContent;
   };
 }> = {
+  //@ts-ignore
+  Test: Test,
   BlockQuote: (props: {
     children: TinaMarkdownContent;
     authorName: string;
