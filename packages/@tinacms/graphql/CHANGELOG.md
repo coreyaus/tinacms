@@ -1,5 +1,11 @@
 # tina-graphql
 
+## 1.4.13
+
+### Patch Changes
+
+- 6fefa56b0: Feat: Update database query to support filtering on list fields
+
 ## 1.4.12
 
 ### Patch Changes
