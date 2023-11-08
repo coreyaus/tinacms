@@ -1,5 +1,98 @@
 # tinacms
 
+## 1.5.23
+
+### Patch Changes
+
+- 131b4dc55: Fix button styling issue when using Firefox
+- 6a8aa3640: allow tinacms to be used in a single backend function
+- 93bfc804a: Fix issue where \_template value was provided when creating a document from the editorial workflow
+- 1fc2c4a99: Fix media manager to pass back error when upload_url fails due to existing file
+- cb0e4b755: ## Summary
+
+  - adds authProvider to defineConfig
+  - adds AbstractAuthProvider class that can be extended to make new auth provider
+  - Adds a Clerk auth provider
+  - renames admin.auth to admin.authHooks
+  - deprecates admin.auth
+
+  Adds the auth provider to the Internal client and config.
+
+  Instead of passing an object that contains the auth functions you can now use an authProvider class. This makes the DX more clear and allows us to use classes for the AuthProvide, GitProvider and Database Adapter. This also means it will be easier to publish new auth providers as packages.
+
+  ## Previously
+
+  ```js
+  defineConfig({
+    admin: {
+      auth: {
+        login() {},
+        logout() {},
+        //...
+      },
+    },
+    //...
+  })
+  ```
+
+  ## New API
+
+  ```js
+  import { customAuthProvider } from 'tinacms-CUSTOM'
+  defineConfig({
+    authProvider: new CustomAuthProvider(),
+  })
+  ```
+
+  ## Migration
+
+  If you are using admin.auth.onLogin or admin.auth.onLogout you can move those functions to admin.authHooks.
+
+  If you are using other function from admin.auth you can move them into a custom auth provider.
+
+  ## Previously
+
+  ```js
+  defineConfig({
+    admin: {
+      auth: {
+        login() {},
+        logout() {},
+        //...
+      },
+    },
+    //...
+  })
+  ```
+
+  ## Update to be
+
+  ## New API
+
+  ```js
+  import { AbstractAuthProvider } from 'tinacms'
+  class CustomAuthProvider extends AbstractAuthProvider {
+    login() {}
+    logout() {}
+    //...
+  }
+  defineConfig({
+    authProvider: new CustomAuthProvider(),
+    //...
+  })
+  ```
+
+  Now everything should work as it previously did.
+
+- a937aabf0: Add support for build.basePath to be an environment variable
+- 630ab9436: No longer treat user touch event as pending change for rich-text fields
+- Updated dependencies [6a8aa3640]
+- Updated dependencies [cb0e4b755]
+  - @tinacms/schema-tools@1.4.14
+  - @tinacms/search@1.0.13
+  - @tinacms/mdx@1.3.21
+  - @tinacms/sharedctx@1.0.2
+
 ## 1.5.22
 
 ### Patch Changes

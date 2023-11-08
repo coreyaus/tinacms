@@ -1,5 +1,11 @@
 # @tinacms/auth
 
+## 1.0.4
+
+### Patch Changes
+
+- 6a8aa3640: allow tinacms to be used in a single backend function
+
 ## 1.0.3
 
 ### Patch Changes
